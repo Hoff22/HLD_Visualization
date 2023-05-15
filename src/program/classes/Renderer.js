@@ -5,12 +5,25 @@ export function drawCircle(position, radius, fillColor = "rgb(25.5,25.5,25.5)", 
     const sPos = program.camera.worldToScreenPosition(position);
     const sLen = program.camera.worldToScreenLength(radius);
     
-    program.ctx.lineWidth = Math.min(3, program.camera.worldToScreenLength(strokeWidth));
+    program.ctx.lineWidth = Math.max(1, program.camera.worldToScreenLength(strokeWidth));
     program.ctx.strokeStyle = strokeColor;
     program.ctx.fillStyle = fillColor;
     program.ctx.beginPath();
     program.ctx.arc(sPos.x, sPos.y, sLen, 0, 7);
     program.ctx.fill();
+    program.ctx.stroke();
+}
+
+export function drawLine(positionA, positionB, strokeWidth = 1, fillColor = "rgb(25.5,25.5,25.5)"){
+    const vUPos = program.camera.worldToScreenPosition(positionA);
+    const vVPos = program.camera.worldToScreenPosition(positionB);
+    const color = fillColor;
+
+    program.ctx.strokeStyle = color;
+    program.ctx.lineWidth = program.camera.worldToScreenLength(Math.max(1, strokeWidth));
+    program.ctx.beginPath();
+    program.ctx.moveTo(vUPos.x, vUPos.y);
+    program.ctx.lineTo(vVPos.x, vVPos.y);
     program.ctx.stroke();
 }
 

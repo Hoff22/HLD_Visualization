@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react'
 import { Camera } from './classes/Camera.js';
 import { Controller } from './classes/Controller.js';
-import { drawCircle, newFrame } from './classes/Renderer.js';
+import { drawCircle, drawLine, newFrame } from './classes/Renderer.js';
 import {Vector2} from './classes/Vector2.js';
 import "./Program.css"
 
@@ -38,6 +38,9 @@ class Program{
     update(){
         this.camera.resizeCanvas();
         newFrame("rgb(25.5,25.5,25.5)");
+        for (let i = 0; i < this.nodes.length-1; i++) {
+            drawLine(this.nodes[i], this.nodes[i+1], 5, "#ff0066");
+        }
         for(let i = 0; i < this.nodes.length; i++){
             drawCircle(this.nodes[i], 20, "rgb(25.5,25.5,25.5)", "#ff0066");
         }
