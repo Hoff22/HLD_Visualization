@@ -2,6 +2,7 @@ import React, {useEffect, useRef} from 'react'
 import { Camera } from './classes/Camera.js';
 import { Controller } from './classes/Controller.js';
 import { drawCircle, drawLine, newFrame } from './classes/Renderer.js';
+import { Tree } from './classes/Tree.js';
 import {Vector2} from './classes/Vector2.js';
 import "./Program.css"
 
@@ -16,6 +17,8 @@ class Program{
 
     nodes = [];
 
+    tr;
+
     init(canvas){
         Program.initialized = true;
         this.canvas = canvas;
@@ -27,6 +30,7 @@ class Program{
     start(){
 
         Controller.setListeners();
+        this.tr = new Tree(1000, "victor");
 
         const requestUpdate = () => {
             this.update()
@@ -38,12 +42,7 @@ class Program{
     update(){
         this.camera.resizeCanvas();
         newFrame("rgb(25.5,25.5,25.5)");
-        for (let i = 0; i < this.nodes.length-1; i++) {
-            drawLine(this.nodes[i], this.nodes[i+1], 5, "#ff0066");
-        }
-        for(let i = 0; i < this.nodes.length; i++){
-            drawCircle(this.nodes[i], 20, "rgb(25.5,25.5,25.5)", "#ff0066");
-        }
+        this.tr.drawTree();
     }
 }
 
