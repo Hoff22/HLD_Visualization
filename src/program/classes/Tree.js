@@ -1,36 +1,40 @@
 import { Camera } from './Camera.js';
-import { drawCircle, drawLine, newFrame } from './Renderer.js';
+import { drawCircle, drawLine, newFrame, drawText } from './Renderer.js';
 import { Vector2 } from './Vector2.js';
 import { Random } from './Random.js'
 
 class Node{
     id;
     position;
+    value;
+    color;
     constructor(id, position){
         this.id = id;
         this.position = position;
+        this.value = 0;
     }
 }
 
 export class Tree{
     nodes = [];
+    adj = [];
+    root;
 
     constructor(amount, seed){
-        this.adj = [];
         for(let i = 0; i < amount; i++){
             this.adj.push([]);
         }
-
-        this.build(amount, seed);    
+        this.root = -1;
+        this.seed = seed;
+        this.build(amount);    
     }
 
-    build(mnt, seed){
+    build(mnt){
         let edges = [];
         let parent = [];
         let height = [];
         let size = 5 * mnt;
 
-        let make_set = (i) => {parent[i] = i};
         let find_set = (i) => {
             if(parent[i] == i) return i;
             return parent[i] = find_set(parent[i]);
@@ -49,13 +53,13 @@ export class Tree{
             }
         };
 
-        let rng = new Random(seed);
+        this.rng = new Random(this.seed);
 
         for(let i = 0; i < mnt; i++){
-            this.nodes.push(new Node(i, new Vector2(0, Math.sqrt(rng()) * size).rotate(rng() * Math.PI * 2)));
+            this.nodes.push(new Node(i, new Vector2(0, Math.sqrt(this.rng()) * size).rotate(this.rng() * Math.PI * 2)));
             parent.push(-1);
             height.push(0);
-            make_set(i);
+            parent[i] = i
         }
         for(let u = 0; u < mnt; u++){
             for(let v = u+1; v < mnt; v++){
@@ -79,23 +83,34 @@ export class Tree{
     }
 
     drawTree(){
-        this.drawEdges(0, -1);
-        this.drawVerts(0, -1);
+        this.drawEdges(Math.max(this.root, 0), -1);
+        this.drawVerts(Math.max(this.root, 0), -1);
     }
 
     drawEdges(u, p){
-        if(p != -1){
-            drawLine(this.nodes[u].position, this.nodes[p].position, 5, "#ff0066");
-        }
         for(let i = 0; i < this.adj[u].length; i++){
             let v = this.adj[u][i];
             if(v == p) continue;
+            if(i == 0){
+                drawLine(this.nodes[u].position, this.nodes[v].position, 10, 3, this.nodes[v].color);
+            }
+            else{
+                drawLine(this.nodes[u].position, this.nodes[v].position, 5, 0.5);
+            }
             this.drawEdges(v, u);
         }
     }
 
     drawVerts(u, p) {
-        drawCircle(this.nodes[u].position, 20, "rgb(25.5,25.5,25.5)", "#ff0066");
+        if (u == this.root){
+            drawCircle(this.nodes[u].position, 20, "rgb(25.5,25.5,25.5)", "#FF0066");
+        }
+        else{
+            drawCircle(this.nodes[u].position, 20, "rgb(25.5,25.5,25.5)", "#CCCCCC");
+        }
+
+        drawText(this.nodes[u].position, 20, this.nodes[u].id)
+
         for (let i = 0; i < this.adj[u].length; i++) {
             let v = this.adj[u][i];
             if (v == p) continue;

@@ -7,7 +7,7 @@ export class Camera{
         this.position = new Vector2(0,0);
 
         /** @type {Number} */
-        this.size = 1;
+        this.size = 10;
 
         this.resizeCanvas();
     }

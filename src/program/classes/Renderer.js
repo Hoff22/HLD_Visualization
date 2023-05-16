@@ -14,13 +14,24 @@ export function drawCircle(position, radius, fillColor = "rgb(25.5,25.5,25.5)", 
     program.ctx.stroke();
 }
 
-export function drawLine(positionA, positionB, strokeWidth = 1, fillColor = "rgb(25.5,25.5,25.5)"){
+export function drawText(position, size, text, fillColor = "rgb(204,204,204)", strokeColor = "rgb(25.5,25.5,25.5)") {
+    const sPos = program.camera.worldToScreenPosition(position);
+    const sLen = program.camera.worldToScreenLength(size);
+
+    program.ctx.fillStyle = fillColor;
+    program.ctx.font = `${sLen}px Arial`;
+    program.ctx.textBaseline = "middle";
+    program.ctx.textAlign = "center";
+    program.ctx.fillText(text, sPos.x, sPos.y);
+}
+
+export function drawLine(positionA, positionB, strokeWidth = 1, strokeWidthMin = 1, fillColor = "#CCCCCC"){
     const vUPos = program.camera.worldToScreenPosition(positionA);
     const vVPos = program.camera.worldToScreenPosition(positionB);
     const color = fillColor;
 
     program.ctx.strokeStyle = color;
-    program.ctx.lineWidth = Math.max(1, program.camera.worldToScreenLength(strokeWidth));
+    program.ctx.lineWidth = Math.max(strokeWidthMin, program.camera.worldToScreenLength(strokeWidth));
     program.ctx.beginPath();
     program.ctx.moveTo(vUPos.x, vUPos.y);
     program.ctx.lineTo(vVPos.x, vVPos.y);

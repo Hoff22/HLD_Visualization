@@ -43,7 +43,7 @@ export class Controller
 
                 // code here
                 console.log("click");
-                program.nodes.push(worldPos);
+                program.selectNode(worldPos);
             }
 
             Controller.m1 = null;
